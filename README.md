@@ -455,21 +455,6 @@ with open("C:/Users/lenovo/Desktop/Market_Basket_Optimisation.csv") as file:
     for row in reader:
         data.append(row)
 
-# To load the dataset
-df=pd.DataFrame(x, columns = te.columns_)
-df.head(n=3)
-# Show the first few rows of the dataset
-df.tail(n=9)
-# Show the last 9 rows of the dataset
-df.isnull().sum()
-# Checks for missing values in the dataset
-
-df.dtypes # Check what kind of data each column contains (numbers, text, dates, etc.)
-
-df.describe() # Display average, min, max and other stats for the numeric data
-
-df.info()
-
 # Display a few transactions to understand the structure
 print("Sample Transactions:\n", data[1:10]) 
 
@@ -488,6 +473,20 @@ x
 
 te.columns_
 
+# To load the dataset
+df=pd.DataFrame(x, columns = te.columns_)
+df.head(n=3)
+# Show the first few rows of the dataset
+df.tail(n=9)
+# Show the last 9 rows of the dataset
+df.isnull().sum()
+# Checks for missing values in the dataset
+
+df.dtypes # Check what kind of data each column contains (numbers, text, dates, etc.)
+
+df.describe() # Display average, min, max and other stats for the numeric data
+
+df.info()
 # Convert the encoded data to a pandas DataFrame
 df = pd.DataFrame(x, columns=te.columns_)
 
