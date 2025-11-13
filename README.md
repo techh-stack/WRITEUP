@@ -531,3 +531,148 @@ plt.ylabel('Confidence')
 plt.title('Association Rules: Support vs Confidence (size by lift)')
 #plt.grid(True)
 plt.show()
+___________________________________________________________________________________________________________________________________________
+                                                          ADBMS
+___________________________________________________________________________________________________________________________________________
+use collegeDB
+
+db.students.insertMany([
+  { _id: 1, name: "John", age: 21, course: "CS", skills: ["Java", "Python"] },
+  { _id: 2, name: "Alice", age: 22, course: "IT", skills: ["C++", "HTML"] },
+  { _id: 3, name: "Bob", age: 23, course: "CS", skills: ["Python", "MongoDB"] },
+  { _id: 4, name: "Emma", age: 20, course: "ECE", skills: ["C", "Matlab"] },
+  { _id: 5, name: "David", age: 24, course: "MECH", skills: ["CAD", "C++"] }
+])
+// 3️⃣ Removing Document
+//-------------------------------------
+db.students.deleteOne({ name: "David" })
+
+//-------------------------------------
+// 4️⃣ Updating Documents
+//-------------------------------------
+
+// Update one field
+db.students.updateOne({ name: "Alice" }, { $set: { age: 23 } })
+
+// Update multiple
+db.students.updateMany({ course: "CS" }, { $set: { batch: "2025" } })
+
+// Replace whole document
+db.students.replaceOne(
+  { name: "Emma" },
+  { name: "Emma", age: 21, course: "ECE", skills: ["Matlab", "C"] }
+)
+//-------------------------------------
+// 5️⃣ Execute 10 Queries (Different Types)
+//-------------------------------------
+// 1. Find all
+db.students.find()
+
+// 2. Find one
+db.students.findOne({ name: "Alice" })
+
+// 3. OR query
+db.students.find({ $or: [ { age: 21 }, { course: "IT" } ] })
+
+// 4. NOT query
+db.students.find({ age: { $not: { $gt: 23 } } })
+
+// 5. Conditional query
+db.students.find({ age: { $gte: 21 } })
+
+// 6. Null / Exists query
+db.students.find({ batch: { $exists: true } })
+
+// 7. Regex query (names starting with A)
+db.students.find({ name: /^A/ })
+
+// 8. Querying arrays
+db.students.find({ skills: { $in: ["Python"] } })
+
+// 9. $where query (JavaScript condition)
+db.students.find({ $where: "this.age > 21" })
+
+// 10. Cursor options (limit, skip, sort)
+db.students.find().skip(1).limit(3).sort({ age: 1 })
+
+//-------------------------------------
+// $where query (JavaScript condition)
+db.students.find({ $where: "this.age > 21" })
+
+// Cursor with skip and limit
+db.students.find().skip(1).limit(2)
+
+// Sort ascending and descending
+db.students.find().sort({ age: 1 })     // ascending
+db.students.find().sort({ age: -1 })    // descending
+
+// Database statistics command
+db.runCommand({ dbStats: 1 })
+
+// Collection statistics
+db.runCommand({ collStats: "students" })
+
+//-------------------------------------
+// Map function
+var map = function() {
+  emit(this.course, 1);
+};
+
+// Reduce function
+var reduce = function(key, values) {
+  return Array.sum(values);
+};
+
+// Execute MapReduce
+db.students.mapReduce(map, reduce, { out: "course_count" });
+
+// View result collection
+db.course_count.find()
+
+//-------------------------------------
+// Aggregation pipeline example
+db.students.aggregate([
+  { $group: { _id: "$course", totalStudents: { $sum: 1 } } },
+  { $sort: { totalStudents: -1 } }
+])
+
+// Another example (average age per course)
+db.students.aggregate([
+  { $group: { _id: "$course", avgAge: { $avg: "$age" } } }
+])
+
+//-------------------------------------
+************** new ****************
+// Create index on course
+db.students.createIndex({ course: 1 })
+
+// Show existing indexes
+db.students.getIndexes()
+
+// Drop an index
+db.students.dropIndex({ course: 1 })
+
+// Find students whose age is between 21 and 23
+db.students.find({ age: { $gte: 21, $lte: 23 } })
+
+// Find students having "Python" as a skill
+db.students.find({ skills: "Python" })
+
+// Find students not in CS course
+db.students.find({ course: { $ne: "CS" } })
+
+// Show only name and course
+db.students.find({}, { name: 1, course: 1, _id: 0 })
+
+// Delete multiple students in CS
+db.students.deleteMany({ course: "CS" })
+
+// Drop the entire collection
+db.students.drop()
+
+// Drop the database
+db.dropDatabase()
+
+
+
+
